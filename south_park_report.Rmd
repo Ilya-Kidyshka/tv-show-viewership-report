@@ -1,0 +1,43 @@
+---
+title: "South Park View Analysis"
+output: html_document
+date: '2025-05-08'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Intro
+
+South Park is an American animated sitcom created by Trey Parker and Matt Stone. It premiered on August 13, 1997, and is known for its satirical and controversial humor.
+
+library(tidyverse)
+
+df <- read_csv("../data/south_park_viewership.csv")
+head(df)
+
+summary(df$ViewersMillions)
+
+df %>%
+  group_by(Season) %>%
+  summarise(
+    Average = mean(ViewersMillions, na.rm = TRUE),
+    Max = max(ViewersMillions, na.rm = TRUE),
+    Min = min(ViewersMillions, na.rm = TRUE)
+  )
+
+ggplot(df, aes(x = Episode, y = ViewersMillions)) +
+  geom_line() +
+  geom_point() +
+  labs(title = "South Park Viewership Over Time", x = "Episode", y = "Viewers (Millions)") +
+  theme_minimal()
+
+df %>%
+  group_by(Season) %>%
+  summarise(AvgViewers = mean(ViewersMillions, na.rm = TRUE)) %>%
+  ggplot(aes(x = factor(Season), y = AvgViewers)) +
+  geom_col(fill = "steelblue") +
+  labs(title = "Average Viewership by Season", x = "Season", y = "Average Viewers (Millions)")
+
+## Between Season 1 and Season 3, the viewership increased by approximately **1.5 million** viewers. The most-watched episode in this dataset had **5.55** million viewers.
